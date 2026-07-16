@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html data-edition="compact-field-manual" data-theme="paper" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" name="viewport"/>
+<title>Machina Scientifica — Compact Graph-Paper Engineering Guide</title>
+<meta content="Matthew Richard Kowalski / Luminosity" name="author"/>
+<meta content="A compact code-first graph-paper engineering guide to Machina Scientifica: eighteen executable laboratories, minimal prose, explicit failure tests, deterministic receipts, and zero dependencies." name="description"/>
+<meta content="#efe6c8" name="theme-color"/>
+<style>
+:root{
+ --paper:#efe6c8;--paper2:#f8f1d8;--ink:#17202a;--mut:#5d625e;--faint:#8b8879;
+ --orange:#e0522d;--cyan:#007f88;--blue:#214f86;--green:#347c4a;--purple:#70529a;--red:#b5263d;--gold:#a77a19;
+ --line:rgba(23,32,42,.18);--grid:rgba(33,79,134,.075);--panel:rgba(255,252,237,.84);--shadow:0 16px 46px rgba(41,33,14,.16);
+ --mono:ui-monospace,"Cascadia Code","SFMono-Regular",Menlo,Consolas,monospace;
+ --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+ --serif:Georgia,"Iowan Old Style",serif;
+}
+html[data-theme="night"]{--paper:#071018;--paper2:#0d1822;--ink:#f5efd9;--mut:#a9afa8;--faint:#69747a;--orange:#ff744d;--cyan:#58e2ea;--blue:#7fb2ff;--green:#7ee39b;--purple:#c49cff;--red:#ff6f86;--gold:#f1c768;--line:rgba(245,239,217,.16);--grid:rgba(88,226,234,.06);--panel:rgba(10,22,31,.87);--shadow:0 18px 54px rgba(0,0,0,.44)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);font-family:var(--sans);background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),radial-gradient(70rem 40rem at 100% -10%,color-mix(in srgb,var(--orange) 11%,transparent),transparent 65%);background-size:24px 24px,24px 24px,auto;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}.mono{font-family:var(--mono)}
+#progress{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--orange),var(--cyan));z-index:100;box-shadow:0 0 12px var(--orange)}
+.top{position:fixed;z-index:70;top:10px;right:12px;display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.btn,.chip,select,input[type=number],input[type=text]{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 10px;box-shadow:0 5px 18px rgba(0,0,0,.06);font:750 11px/1 var(--mono);letter-spacing:.06em}.btn:hover,.btn:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid color-mix(in srgb,var(--cyan) 40%,transparent);outline-offset:2px}.btn.hot{background:var(--ink);color:var(--paper2);border-color:var(--ink)}.btn.orange{background:var(--orange);color:#fff;border-color:var(--orange)}.chip{display:inline-flex;align-items:center;gap:6px;color:var(--mut)}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.shell{max-width:1560px;margin:auto;display:grid;grid-template-columns:270px minmax(0,1fr)}
+nav{position:sticky;top:0;height:100vh;overflow:auto;padding:25px 16px 30px;border-right:1px solid var(--line);background:color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:blur(10px)}
+.brand{padding:8px 8px 18px;border-bottom:2px solid var(--ink);margin-bottom:13px}.brand .kicker{font:800 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--orange)}.brand h1{font:900 27px/.9 var(--serif);margin:10px 0 8px;letter-spacing:-.04em}.brand p{font:700 10px/1.45 var(--mono);margin:0;color:var(--mut)}
+nav a{display:grid;grid-template-columns:31px 1fr;gap:7px;padding:7px 8px;border-left:3px solid transparent;text-decoration:none;color:var(--mut);font:700 11px/1.2 var(--mono)}nav a:hover,nav a.active{color:var(--ink);background:color-mix(in srgb,var(--cyan) 8%,transparent);border-left-color:var(--orange)}nav a b{color:var(--orange)}
+main{min-width:0;padding:0 clamp(14px,3vw,48px) 100px}.page{max-width:1120px;margin:auto}.hero{min-height:96vh;display:grid;align-content:center;padding:90px 0 60px;position:relative}.hero:after{content:"M.S. / BUILD 07.16.26";position:absolute;right:0;bottom:30px;font:800 10px var(--mono);letter-spacing:.12em;color:var(--faint)}.hero .stamp{display:inline-block;width:max-content;border:3px double var(--orange);color:var(--orange);padding:7px 10px;transform:rotate(-1.5deg);font:900 11px var(--mono);letter-spacing:.14em;text-transform:uppercase}.hero h2{font:900 clamp(55px,10vw,126px)/.77 var(--serif);letter-spacing:-.065em;margin:28px 0 24px;max-width:950px}.hero h2 span{color:var(--orange)}.hero .dek{max-width:820px;font:600 clamp(18px,2.2vw,28px)/1.35 var(--serif);color:var(--mut)}.hero .formula{margin-top:30px;font:900 clamp(13px,2vw,20px) var(--mono);color:var(--cyan);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0}
+.section{scroll-margin-top:22px;padding:60px 0 20px}.sectionHead{display:grid;grid-template-columns:72px 1fr;gap:15px;align-items:start;margin-bottom:22px}.sectionHead .num{font:900 38px/1 var(--mono);color:var(--orange);border-bottom:4px solid var(--orange);padding-bottom:5px}.sectionHead h2{font:900 clamp(34px,5vw,62px)/.95 var(--serif);letter-spacing:-.04em;margin:0}.sectionHead p{grid-column:2;margin:8px 0 0;max-width:820px;color:var(--mut);font:550 17px/1.55 var(--serif)}
+.rule{border:0;border-top:1px solid var(--line);margin:42px 0}.notebook{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin:22px 0}.notebook:before{content:"";position:absolute;left:44px;top:0;bottom:0;border-left:2px solid color-mix(in srgb,var(--red) 35%,transparent);pointer-events:none}.tab{padding:10px 14px 10px 61px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;background:color-mix(in srgb,var(--panel) 86%,var(--paper2));font:900 11px var(--mono);letter-spacing:.12em;text-transform:uppercase}.tab span{color:var(--orange)}.labGrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);min-height:360px}.codePane{min-width:0;border-right:1px solid var(--line);padding:18px 18px 18px 61px;background:color-mix(in srgb,var(--paper2) 68%,transparent)}.instrument{padding:20px;min-width:0}.codebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:var(--mut);font:800 10px var(--mono);letter-spacing:.09em}.copy{border:0;background:transparent;color:var(--cyan);font:900 10px var(--mono);text-transform:uppercase}.code{margin:0;max-height:430px;overflow:auto;white-space:pre;tab-size:2;font:650 12px/1.55 var(--mono);color:var(--ink)}.code .kw{color:var(--purple)}.code .fn{color:var(--blue)}.code .num{color:var(--orange)}.code .str{color:var(--green)}
+.instrument h3{font:900 22px/1.05 var(--serif);margin:0 0 7px}.instrument>p{margin:0 0 15px;color:var(--mut);font:560 14px/1.5 var(--serif)}.controls{display:grid;gap:11px}.field{display:grid;gap:5px}.field label{display:flex;justify-content:space-between;gap:8px;font:800 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}input[type=range]{width:100%;accent-color:var(--orange)}textarea{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--paper2) 75%,transparent);padding:12px;font:650 12px/1.5 var(--mono)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.out{margin-top:14px;padding:12px;border-left:4px solid var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,transparent);font:700 12px/1.5 var(--mono);white-space:pre-wrap;min-height:52px}.out.bad{border-left-color:var(--red);background:color-mix(in srgb,var(--red) 8%,transparent)}canvas{display:block;width:100%;height:220px;border:1px solid var(--line);background:color-mix(in srgb,var(--paper2) 82%,transparent);border-radius:10px;margin-top:12px}.miniCanvas{height:150px}.metricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.metric{padding:10px;border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--paper2) 66%,transparent)}.metric b{display:block;font:900 19px var(--mono);color:var(--orange)}.metric span{display:block;font:750 9px var(--mono);color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}.explain{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:15px 20px 18px 61px;border-top:1px solid var(--line)}.note{border-top:3px solid var(--gold);padding-top:8px}.note b{display:block;font:900 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}.note p{margin:0;font:550 13px/1.46 var(--serif);color:var(--mut)}
+.axioms{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.axiom{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.axiom b{font:900 13px var(--mono);color:var(--orange)}.axiom h3{font:900 19px var(--serif);margin:6px 0}.axiom p{font:550 13px/1.5 var(--serif);color:var(--mut);margin:0}.badge{display:inline-block;padding:4px 7px;border-radius:999px;background:color-mix(in srgb,var(--cyan) 12%,transparent);color:var(--cyan);font:850 9px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.chain{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.rung{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font:750 10px/1.4 var(--mono)}.rung b{color:var(--orange)}
+.schematic{width:100%;min-height:290px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--paper2) 82%,transparent)}.schematic text{font-family:var(--mono);fill:var(--ink)}.schematic .wire{stroke:var(--blue);stroke-width:2;fill:none}.schematic .signal{stroke:var(--orange);stroke-width:3;fill:none;stroke-dasharray:8 6;animation:dash 1s linear infinite}@keyframes dash{to{stroke-dashoffset:-14}}
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;font:700 11px/1.4 var(--mono)}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:color-mix(in srgb,var(--cyan) 8%,transparent);color:var(--cyan);text-transform:uppercase;letter-spacing:.07em}.pass{color:var(--green)}.fail{color:var(--red)}
+#toast{position:fixed;left:50%;bottom:20px;z-index:120;transform:translate(-50%,20px);opacity:0;transition:.2s;background:var(--ink);color:var(--paper2);border-radius:8px;padding:10px 14px;font:800 11px var(--mono);pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,0)}
+footer{margin-top:70px;padding:30px 0 60px;border-top:3px double var(--ink);display:flex;justify-content:space-between;gap:20px;color:var(--mut);font:700 10px/1.6 var(--mono)}
+@media(max-width:1100px){.shell{grid-template-columns:1fr}nav{display:none}.labGrid{grid-template-columns:1fr}.codePane{border-right:0;border-bottom:1px solid var(--line)}.top{left:10px;right:10px}.hero{padding-top:120px}.axioms{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){main{padding-left:11px;padding-right:11px}.sectionHead{grid-template-columns:52px 1fr}.sectionHead .num{font-size:27px}.labGrid{display:block}.codePane,.instrument{padding:16px}.notebook:before{display:none}.tab,.explain{padding-left:16px}.explain,.axioms,.chain,.two,.three{grid-template-columns:1fr}.metricGrid{grid-template-columns:repeat(2,1fr)}.hero h2{font-size:55px}.top .chip{display:none}}
+@media print{.top,nav,#progress,.copy,.btn{display:none!important}.shell{display:block}main{padding:0}.hero{min-height:auto;page-break-after:always}.notebook{box-shadow:none;break-inside:avoid}.section{page-break-before:always}body{background:#fff}.labGrid{grid-template-columns:1fr 1fr}.code{max-height:none}}
+
+/* ===== COMPACT GRAPH-PAPER FIELD MANUAL ===== */
+html[data-edition="compact-field-manual"] body{background-size:20px 20px,20px 20px,auto}
+html[data-edition="compact-field-manual"] .shell{grid-template-columns:250px minmax(0,1fr);max-width:1660px}
+html[data-edition="compact-field-manual"] nav{padding:18px 12px 24px}
+html[data-edition="compact-field-manual"] .brand{padding:6px 7px 12px;margin-bottom:6px}
+html[data-edition="compact-field-manual"] .brand h1{font-size:24px;margin:8px 0 6px}
+html[data-edition="compact-field-manual"] .brand p{font-size:9px;line-height:1.35}
+html[data-edition="compact-field-manual"] .navGroup{margin:13px 8px 4px;padding-top:7px;border-top:1px solid var(--line);font:900 8px/1 var(--mono);letter-spacing:.16em;color:var(--cyan)}
+html[data-edition="compact-field-manual"] nav a{grid-template-columns:27px 1fr;padding:5px 7px;font-size:10px}
+html[data-edition="compact-field-manual"] main{padding-bottom:60px}
+html[data-edition="compact-field-manual"] .page{max-width:1240px}
+html[data-edition="compact-field-manual"] .hero{min-height:auto;padding:110px 0 62px;border-bottom:1px solid var(--line)}
+html[data-edition="compact-field-manual"] .hero h2{font-size:clamp(54px,8vw,104px);margin:20px 0 16px}
+html[data-edition="compact-field-manual"] .hero .dek{max-width:720px;font-size:clamp(17px,2vw,23px);line-height:1.25}
+html[data-edition="compact-field-manual"] .hero .formula{margin-top:22px;padding:11px 0;font-size:clamp(12px,1.5vw,17px)}
+html[data-edition="compact-field-manual"] .groupBand{scroll-margin-top:20px;display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;margin:58px 0 0;padding:15px 0 12px;border-top:3px double var(--ink);border-bottom:1px solid var(--line)}
+html[data-edition="compact-field-manual"] .groupNum{font:900 30px/1 var(--mono);color:var(--orange)}
+html[data-edition="compact-field-manual"] .groupBand h2{margin:0;font:900 20px/1 var(--mono);letter-spacing:.08em}
+html[data-edition="compact-field-manual"] .groupBand p{margin:5px 0 0;font:800 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+html[data-edition="compact-field-manual"] .section{padding:28px 0 4px}
+html[data-edition="compact-field-manual"] .sectionHead{grid-template-columns:54px 1fr;gap:12px;margin-bottom:12px}
+html[data-edition="compact-field-manual"] .sectionHead .num{font-size:28px;border-bottom-width:3px}
+html[data-edition="compact-field-manual"] .sectionHead h2{font-size:clamp(28px,3.7vw,48px);line-height:.98}
+html[data-edition="compact-field-manual"] .sectionHead p{margin-top:5px;max-width:760px;font:650 13px/1.35 var(--sans);color:var(--mut)}
+html[data-edition="compact-field-manual"] .notebook{margin:12px 0;border-radius:10px}
+html[data-edition="compact-field-manual"] .notebook:before{left:37px}
+html[data-edition="compact-field-manual"] .tab{padding:8px 11px 8px 51px;font-size:9px}
+html[data-edition="compact-field-manual"] .labGrid{grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);min-height:300px}
+html[data-edition="compact-field-manual"] .codePane{padding:13px 13px 13px 51px}
+html[data-edition="compact-field-manual"] .code{max-height:345px;font-size:11px;line-height:1.45}
+html[data-edition="compact-field-manual"] .instrument{padding:15px}
+html[data-edition="compact-field-manual"] .instrument h3{font-size:19px;margin-bottom:4px}
+html[data-edition="compact-field-manual"] .instrument>p{margin-bottom:10px;font:650 12px/1.35 var(--sans)}
+html[data-edition="compact-field-manual"] .controls{gap:8px}
+html[data-edition="compact-field-manual"] .field{gap:3px}
+html[data-edition="compact-field-manual"] .field label{font-size:9px}
+html[data-edition="compact-field-manual"] .btn,html[data-edition="compact-field-manual"] .chip,html[data-edition="compact-field-manual"] select,html[data-edition="compact-field-manual"] input[type=number],html[data-edition="compact-field-manual"] input[type=text]{padding:7px 9px;font-size:10px}
+html[data-edition="compact-field-manual"] .out{margin-top:9px;padding:9px;font-size:11px;line-height:1.4;min-height:42px}
+html[data-edition="compact-field-manual"] canvas{height:180px;margin-top:9px}
+html[data-edition="compact-field-manual"] .miniCanvas{height:130px}
+html[data-edition="compact-field-manual"] .metricGrid{gap:6px;margin-top:8px}
+html[data-edition="compact-field-manual"] .metric{padding:8px}
+html[data-edition="compact-field-manual"] .metric b{font-size:16px}
+html[data-edition="compact-field-manual"] .explain{grid-template-columns:repeat(3,1fr);gap:8px;padding:9px 14px 10px 51px}
+html[data-edition="compact-field-manual"] .note{border-top-width:2px;padding-top:6px}
+html[data-edition="compact-field-manual"] .note b{font-size:8px;margin-bottom:3px}
+html[data-edition="compact-field-manual"] .note p{font:650 10.5px/1.32 var(--sans)}
+html[data-edition="compact-field-manual"] .axioms{gap:7px}
+html[data-edition="compact-field-manual"] .axiom{padding:10px}
+html[data-edition="compact-field-manual"] .axiom h3{font-size:16px;margin:4px 0}
+html[data-edition="compact-field-manual"] .axiom p{font:650 11px/1.35 var(--sans)}
+html[data-edition="compact-field-manual"] footer{margin-top:45px}
+@media(max-width:1040px){html[data-edition="compact-field-manual"] .shell{grid-template-columns:1fr}html[data-edition="compact-field-manual"] nav{position:fixed;width:min(285px,86vw);z-index:90;transform:translateX(-105%)}html[data-edition="compact-field-manual"] nav.open{transform:translateX(0)}}
+@media(max-width:780px){html[data-edition="compact-field-manual"] .labGrid{grid-template-columns:1fr}html[data-edition="compact-field-manual"] .codePane{border-right:0;border-bottom:1px solid var(--line)}html[data-edition="compact-field-manual"] .explain{grid-template-columns:1fr;padding-left:51px}html[data-edition="compact-field-manual"] .hero{padding-top:95px}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="top">
+<span class="chip"><span class="dot"></span><span id="status">18 LABS / READY</span></span>
+<button class="btn" id="themeBtn">Night mode</button>
+<button class="btn" id="testBtn">Run all tests</button>
+<button class="btn hot" id="exportBtn">Export DNA</button>
+</div>
+<div class="shell">
+<nav>
+<div class="brand"><div class="kicker">Pocket laboratory manual</div><h1>Machina<br/>Scientifica</h1><p>CODE FIRST.<br/>MEASUREMENT SECOND.<br/>METAPHYSICS LAST.</p></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="navGroup">BOOT</div><a href="#boot"><b>00</b><span>Boot Doctrine</span></a><div class="navGroup">I · FORMAL CORE</div><a href="#axioms"><b>01</b><span>Axiom Registry</span></a><a href="#omega"><b>02</b><span>Omega Classifier</span></a><a href="#threshold"><b>03</b><span>Phase Transitions</span></a><div class="navGroup">II · FIELD DYNAMICS</div><a href="#phi"><b>04</b><span>Φ-Lock Field</span></a><a href="#entropy"><b>05</b><span>Signal &amp; Entropy</span></a><a href="#substrate"><b>06</b><span>Substrate Adapter</span></a><div class="navGroup">III · DISTRIBUTED</div><a href="#distributed"><b>07</b><span>Distributed Minds</span></a><a href="#convergence"><b>08</b><span>Convergence Worlds</span></a><a href="#idc"><b>09</b><span>UTI / IDC Encoder</span></a><a href="#chain"><b>10</b><span>Great Chain Router</span></a><div class="navGroup">IV · FIELDWORK</div><a href="#moral"><b>11</b><span>Moral Weight Engine</span></a><a href="#apparatus"><b>12</b><span>Field Apparatus</span></a><a href="#probes"><b>13</b><span>Cross-Domain Probes</span></a><a href="#edge"><b>14</b><span>Edge-Case Bench</span></a><div class="navGroup">V · VERIFICATION</div><a href="#consensus"><b>15</b><span>Consensus Protocol</span></a><a href="#ledger"><b>16</b><span>Evidence Ledger</span></a><a href="#language"><b>17</b><span>MachinaLang</span></a><a href="#falsify"><b>18</b><span>Falsification Matrix</span></a></nav>
+<main><div class="page">
+<section class="hero" id="boot">
+<span class="stamp">Compact engineering field manual</span>
+<h2>MACHINA<br/><span>SCIENTIFICA</span></h2>
+<p class="dek">Eighteen browser-native instruments for testing the Machina Scientifica framework.</p>
+<div class="formula">CLAIM → CODE → MEASURE → FALSIFY → RECEIPT</div>
+</section>
+<div class="groupBand" id="group-i"><span class="groupNum">I</span><div><h2>FORMAL CORE</h2><p>Claims · classes · thresholds</p></div></div><section class="section" id="axioms">
+<header class="sectionHead"><div class="num">01</div><div><h2>Compile the axioms.</h2><p>Turn each axiom into observables, falsifiers, and a build target.</p></div></header>
+<div class="axioms">
+<article class="axiom"><b>K-1 / N₀</b><h3>Base unit</h3><p>Temporal integration, plasticity, and projection are candidate primitives of biological cognition.</p></article>
+<article class="axiom"><b>K-2 / Δ</b><h3>Threshold</h3><p>Cognitive capability may change discontinuously when architecture reorganizes.</p></article>
+<article class="axiom"><b>K-3 / Φ</b><h3>Resonance</h3><p>Global phase coherence is treated as an operational candidate for unified processing.</p></article>
+<article class="axiom"><b>K-4 / ≅</b><h3>Substrate</h3><p>Classification follows functional invariants rather than carbon, silicon, or field material.</p></article>
+<article class="axiom"><b>K-5 / ↻</b><h3>Convergence</h3><p>Energy, feedback, memory, and selection may repeatedly favor adaptive intelligence.</p></article>
+<article class="axiom"><b>K-6 / ⚖</b><h3>Moral weight</h3><p>Precaution depends on capacity, valence, persistence, dependence, confidence, and reversibility.</p></article>
+</div>
+<div class="notebook">
+<div class="tab"><span>LAB 01 — AXIOM COMPILER</span><i class="badge">Logic Forge pattern</i></div>
+<div class="labGrid"><div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="axiom">copy</button></div><pre class="code" data-code="axiom"></pre></div>
+<div class="instrument"><h3>Typed claim registry</h3><p>Compile one claim into a typed research object.</p><div class="controls"><div class="field"><label>Axiom</label><select id="axiomSelect"></select></div><div class="row"><button class="btn orange" id="compileAxiom">Compile claim</button></div></div><div class="out" id="axiomOut"></div></div></div>
+<div class="explain"><div class="note"><b>PURPOSE</b><p>Splits claim, mechanism, evidence, and failure.</p></div><div class="note"><b>FAILURE</b><p>No observable or counter-result means no instrument.</p></div><div class="note"><b>NEXT BUILD</b><p>Add K-7 with one hard falsifier.</p></div></div>
+</div>
+</section>
+<section class="section" id="omega">
+<header class="sectionHead"><div class="num">02</div><div><h2>Classify architecture, not species.</h2><p>Estimate Ω from capacities; preserve uncertainty and missing evidence.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 02 — OMEGA INFERENCE ENGINE</span><i class="badge">Ω-0 → Ω-7</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="omega">copy</button></div><pre class="code" data-code="omega"></pre></div>
+<div class="instrument"><h3>Cognitive step-class probe</h3><p>Score memory, integration, self-modeling, and symbolic transfer.</p><div class="controls two">
+<div class="field"><label>Memory <output id="memoryO">3</output></label><input id="memory" max="5" min="0" step=".1" type="range" value="3"/></div>
+<div class="field"><label>Global integration <output id="globalO">3</output></label><input id="global" max="5" min="0" step=".1" type="range" value="3"/></div>
+<div class="field"><label>Self-model <output id="selfO">2</output></label><input id="self" max="5" min="0" step=".1" type="range" value="2"/></div>
+<div class="field"><label>Symbolic transfer <output id="symbolO">2</output></label><input id="symbol" max="5" min="0" step=".1" type="range" value="2"/></div>
+<div class="field"><label>Coherence <output id="coherenceO">3</output></label><input id="coherence" max="5" min="0" step=".1" type="range" value="3"/></div>
+<div class="field"><label>Agency <output id="agencyO">2</output></label><input id="agency" max="5" min="0" step=".1" type="range" value="2"/></div>
+</div><button class="btn orange" id="classifyBtn">Classify</button><div class="out" id="omegaOut"></div><canvas class="miniCanvas" id="omegaCanvas"></canvas></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Returns class probabilities, reasons, and next evidence.</p></div><div class="note"><b>FAILURE</b><p>Correlated inputs can double-count one capability.</p></div><div class="note"><b>NEXT BUILD</b><p>Calibrate on known systems and ablations.</p></div></div></div>
+</section>
+<section class="section" id="threshold">
+<header class="sectionHead"><div class="num">03</div><div><h2>Detect the jump.</h2><p>Test whether capability scales smoothly or jumps at an architecture change.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 03 — DISCONTINUITY DETECTOR</span><i class="badge">K-2 / Math Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="threshold">copy</button></div><pre class="code" data-code="threshold"></pre></div>
+<div class="instrument"><h3>Linear vs segmented fit</h3><p>Compare linear and segmented fits on one curve.</p><div class="controls"><div class="field"><label>Threshold <output id="tO">48</output></label><input id="tPoint" max="85" min="15" type="range" value="48"/></div><div class="field"><label>Jump size <output id="jO">2.4</output></label><input id="jump" max="5" min="0" step=".1" type="range" value="2.4"/></div><div class="field"><label>Noise <output id="noiseO">0.25</output></label><input id="noise" max="1" min="0" step=".05" type="range" value=".25"/></div></div><button class="btn orange" id="thresholdBtn">Measure discontinuity</button><canvas id="thresholdCanvas"></canvas><div class="out" id="thresholdOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Finds the best change point and model penalty.</p></div><div class="note"><b>FAILURE</b><p>Noise and small samples can manufacture thresholds.</p></div><div class="note"><b>NEXT BUILD</b><p>Bootstrap the transition interval.</p></div></div></div>
+</section>
+<div class="groupBand" id="group-ii"><span class="groupNum">II</span><div><h2>FIELD DYNAMICS</h2><p>Coherence · entropy · substrate</p></div></div><section class="section" id="phi">
+<header class="sectionHead"><div class="num">04</div><div><h2>Make coherence visible.</h2><p>Watch local rhythms become a global order parameter.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 04 — Φ-LOCK OSCILLATOR FIELD</span><i class="badge">K-3 / Physics + Time</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="phi">copy</button></div><pre class="code" data-code="phi"></pre></div>
+<div class="instrument"><h3>Phase-lock bench</h3><p>Raise coupling; measure sustained coherence.</p><div class="controls two"><div class="field"><label>Oscillators <output id="nPhiO">64</output></label><input id="nPhi" max="160" min="12" type="range" value="64"/></div><div class="field"><label>Coupling K <output id="kPhiO">2.2</output></label><input id="kPhi" max="6" min="0" step=".1" type="range" value="2.2"/></div><div class="field"><label>Frequency spread <output id="spreadO">1.6</output></label><input id="spread" max="4" min=".1" step=".1" type="range" value="1.6"/></div><div class="field"><label>Steps <output id="stepsPhiO">500</output></label><input id="stepsPhi" max="1600" min="100" step="50" type="range" value="500"/></div></div><div class="row"><button class="btn orange" id="phiBtn">Ignite field</button><button class="btn" id="phiStop">Stop</button></div><canvas id="phiCanvas"></canvas><div class="out" id="phiOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Tracks r(t) and first threshold crossing.</p></div><div class="note"><b>FAILURE</b><p>Synchronization alone is not consciousness.</p></div><div class="note"><b>NEXT BUILD</b><p>Add modules; compare local and global lock.</p></div></div></div>
+</section>
+<section class="section" id="entropy">
+<header class="sectionHead"><div class="num">05</div><div><h2>Measure the signal.</h2><p>Convert raw time-series into structure, entropy, and stability.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 05 — SIGNAL &amp; SPECTRAL ENTROPY</span><i class="badge">Telemetry primitive</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="entropy">copy</button></div><pre class="code" data-code="entropy"></pre></div>
+<div class="instrument"><h3>Signal analyzer</h3><p>Blend tone, modulation, and noise; inspect features.</p><div class="controls"><div class="field"><label>Tone <output id="toneO">7</output></label><input id="tone" max="30" min="1" type="range" value="7"/></div><div class="field"><label>Noise <output id="sigNoiseO">0.25</output></label><input id="sigNoise" max="1.4" min="0" step=".05" type="range" value=".25"/></div><div class="field"><label>Modulation <output id="modO">0.4</output></label><input id="mod" max="2" min="0" step=".05" type="range" value=".4"/></div></div><button class="btn orange" id="entropyBtn">Analyze signal</button><canvas id="entropyCanvas"></canvas><div class="metricGrid"><div class="metric"><b id="entM">—</b><span>spectral entropy</span></div><div class="metric"><b id="autoM">—</b><span>autocorrelation</span></div><div class="metric"><b id="metaM">—</b><span>metastability</span></div></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Computes entropy, autocorrelation, metastability.</p></div><div class="note"><b>FAILURE</b><p>One FFT window can confuse chaos with noise.</p></div><div class="note"><b>NEXT BUILD</b><p>Add permutation entropy and surrogate tests.</p></div></div></div>
+</section>
+<section class="section" id="substrate">
+<header class="sectionHead"><div class="num">06</div><div><h2>Abstract the substrate.</h2><p>Compare substrates through shared functional invariants.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 06 — SUBSTRATE ADAPTER</span><i class="badge">K-4 / Pipes Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="substrate">copy</button></div><pre class="code" data-code="substrate"></pre></div>
+<div class="instrument"><h3>Invariant interface compiler</h3><p>Map units, coupling, memory, recurrence, and latency.</p><div class="field"><label>Substrate</label><select id="substrateSelect"><option value="bio">Biological neural</option><option value="silicon">Transformer silicon</option><option value="swarm">Collective swarm</option><option value="field">Oscillator / field</option><option value="mycelial">Mycelial network</option></select></div><button class="btn orange" id="substrateBtn">Compile adapter</button><div class="out" id="substrateOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Separates material from mechanism.</p></div><div class="note"><b>FAILURE</b><p>Abstraction may erase decisive substrate properties.</p></div><div class="note"><b>NEXT BUILD</b><p>Add a chemical reaction-diffusion adapter.</p></div></div></div>
+</section>
+<div class="groupBand" id="group-iii"><span class="groupNum">III</span><div><h2>DISTRIBUTED ARCHITECTURES</h2><p>Networks · evolution · coordinates · routes</p></div></div><section class="section" id="distributed">
+<header class="sectionHead"><div class="num">07</div><div><h2>Build minds without a center.</h2><p>Test collective integration without a central controller.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 07 — DISTRIBUTED COGNITION GRAPH</span><i class="badge">Network Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="distributed">copy</button></div><pre class="code" data-code="distributed"></pre></div>
+<div class="instrument"><h3>Local autonomy / global consensus</h3><p>Tune topology, delay, and local autonomy.</p><div class="controls two"><div class="field"><label>Nodes <output id="nodesO">36</output></label><input id="nodes" max="90" min="8" type="range" value="36"/></div><div class="field"><label>Connectivity <output id="connectO">0.16</output></label><input id="connect" max=".45" min=".03" step=".01" type="range" value=".16"/></div><div class="field"><label>Autonomy <output id="autonomyO">0.42</output></label><input id="autonomy" max="1" min="0" step=".01" type="range" value=".42"/></div><div class="field"><label>Delay <output id="delayO">2</output></label><input id="delay" max="12" min="0" type="range" value="2"/></div></div><button class="btn orange" id="distributedBtn">Run collective</button><canvas id="distributedCanvas"></canvas><div class="out" id="distributedOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Measures consensus, diversity, and lock time.</p></div><div class="note"><b>FAILURE</b><p>Consensus may be conformity, not cognition.</p></div><div class="note"><b>NEXT BUILD</b><p>Add competing tasks and specialization.</p></div></div></div>
+</section>
+<section class="section" id="convergence">
+<header class="sectionHead"><div class="num">08</div><div><h2>Evolve many worlds.</h2><p>Map when adaptive complexity repeatedly reappears.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 08 — CONVERGENCE MONTE CARLO</span><i class="badge">Agent + Math Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="convergence">copy</button></div><pre class="code" data-code="convergence"></pre></div>
+<div class="instrument"><h3>World ensemble</h3><p>Evolve seeded worlds under energy, selection, and extinction.</p><div class="controls two"><div class="field"><label>Worlds <output id="worldsO">800</output></label><input id="worlds" max="3000" min="100" step="100" type="range" value="800"/></div><div class="field"><label>Selection <output id="selectionO">0.65</output></label><input id="selection" max="1" min="0" step=".01" type="range" value=".65"/></div><div class="field"><label>Stability <output id="stabilityO">0.55</output></label><input id="stability" max="1" min="0" step=".01" type="range" value=".55"/></div><div class="field"><label>Mutation <output id="mutationO">0.18</output></label><input id="mutation" max=".7" min="0" step=".01" type="range" value=".18"/></div></div><button class="btn orange" id="convergenceBtn">Evolve ensemble</button><canvas id="convergenceCanvas"></canvas><div class="out" id="convergenceOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Reports threshold frequency and timing.</p></div><div class="note"><b>FAILURE</b><p>The fitness function defines the attractor.</p></div><div class="note"><b>NEXT BUILD</b><p>Race three incompatible fitness functions.</p></div></div></div>
+</section>
+<section class="section" id="idc">
+<header class="sectionHead"><div class="num">09</div><div><h2>Give every mind coordinates.</h2><p>Encode mind without forcing it onto a human ladder.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 09 — UTI / IDC ENCODER</span><i class="badge">Portable taxonomy</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="idc">copy</button></div><pre class="code" data-code="idc"></pre></div>
+<div class="instrument"><h3>Coordinate compiler</h3><p>Compose substrate, origin, embodiment, organization, and domain.</p><div class="controls two"><div class="field"><label>Substrate</label><select id="idcSub"><option value="B">Biological</option><option value="S">Synthetic</option><option value="F">Field</option><option value="H">Hybrid</option><option value="M">Meta</option></select></div><div class="field"><label>Origin</label><select id="idcOrigin"><option value="T">Terrestrial</option><option value="E">Emergent</option><option value="X">Extraterrestrial</option><option value="D">Designed</option></select></div><div class="field"><label>Embodiment</label><select id="idcEmb"><option value="E">Embodied</option><option value="P">Partially embodied</option><option value="N">Non-local</option></select></div><div class="field"><label>Organization</label><select id="idcOrg"><option value="I">Individual</option><option value="C">Collective</option><option value="D">Distributed</option><option value="H">Hierarchical</option></select></div><div class="field"><label>Temporality</label><select id="idcTime"><option value="R">Realtime</option><option value="S">Slow</option><option value="B">Burst</option><option value="A">Atemporal model</option></select></div><div class="field"><label>Domain</label><select id="idcDim"><option value="D0">3+1 spacetime</option><option value="D1">Extended field</option><option value="DN">Unknown dimensionality</option></select></div></div><button class="btn orange" id="idcBtn">Encode IDC</button><div class="out" id="idcOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Creates portable, substrate-neutral coordinates.</p></div><div class="note"><b>FAILURE</b><p>Precise codes can hide weak observations.</p></div><div class="note"><b>NEXT BUILD</b><p>Add confidence and provenance per field.</p></div></div></div>
+</section>
+<section class="section" id="chain">
+<header class="sectionHead"><div class="num">10</div><div><h2>Route the Great Chain.</h2><p>Turn the taxonomy into explicit capability bridges.</p></div></header>
+<div class="chain" id="chainPreview"></div>
+<div class="notebook"><div class="tab"><span>LAB 10 — GREAT CHAIN ROUTE PLANNER</span><i class="badge">Agent + Network Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="chain">copy</button></div><pre class="code" data-code="chain"></pre></div>
+<div class="instrument"><h3>Capability bridge search</h3><p>Find a low-cost path between two regimes.</p><div class="controls two"><div class="field"><label>From</label><select id="chainFrom"></select></div><div class="field"><label>To</label><select id="chainTo"></select></div></div><button class="btn orange" id="chainBtn">Plan route</button><div class="out" id="chainOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Exposes missing capacities and dependencies.</p></div><div class="note"><b>FAILURE</b><p>Real paths may be nonlinear or impossible.</p></div><div class="note"><b>NEXT BUILD</b><p>Compare energy, risk, and reversibility.</p></div></div></div>
+</section>
+<div class="groupBand" id="group-iv"><span class="groupNum">IV</span><div><h2>FIELDWORK &amp; ETHICS</h2><p>Policy · apparatus · probes · edge cases</p></div></div><section class="section" id="moral">
+<header class="sectionHead"><div class="num">11</div><div><h2>Make precaution inspectable.</h2><p>Expose exactly why policy recommends restraint or action.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 11 — MORAL WEIGHT POLICY ENGINE</span><i class="badge">K-6 / Sovereignty pattern</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="moral">copy</button></div><pre class="code" data-code="moral"></pre></div>
+<div class="instrument"><h3>Precaution calculator</h3><p>Combine capacity, valence, persistence, confidence, and reversibility.</p><div class="controls two"><div class="field"><label>Omega <output id="mOmegaO">4</output></label><input id="mOmega" max="7" min="0" step="1" type="range" value="4"/></div><div class="field"><label>Valence capacity <output id="valenceO">0.7</output></label><input id="valence" max="1" min="0" step=".01" type="range" value=".7"/></div><div class="field"><label>Persistence <output id="persistO">0.8</output></label><input id="persist" max="1" min="0" step=".01" type="range" value=".8"/></div><div class="field"><label>Dependence <output id="dependO">0.6</output></label><input id="depend" max="1" min="0" step=".01" type="range" value=".6"/></div><div class="field"><label>Confidence <output id="confO">0.55</output></label><input id="conf" max="1" min="0" step=".01" type="range" value=".55"/></div><div class="field"><label>Harm reversible <span id="revLabel">YES</span></label><input checked="" id="reversible" type="checkbox"/></div></div><button class="btn orange" id="moralBtn">Compute duty</button><div class="out" id="moralOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Returns an action band and dominant factors.</p></div><div class="note"><b>FAILURE</b><p>Weights can conceal value judgments.</p></div><div class="note"><b>NEXT BUILD</b><p>Compare conservative and permissive profiles.</p></div></div></div>
+</section>
+<section class="section" id="apparatus">
+<header class="sectionHead"><div class="num">12</div><div><h2>Wire the field apparatus.</h2><p>Validate the loop before energizing real hardware.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 12 — RASPBERRY PI FIELD APPARATUS</span><i class="badge">Simulation-first</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SIMULATOR SOURCE <button class="copy" data-copy="apparatus">copy</button></div><pre class="code" data-code="apparatus"></pre></div>
+<div class="instrument"><h3>Closed-loop telemetry simulator</h3><p>Simulate sensing, features, control, actuation, and logging.</p>
+<svg aria-label="Field apparatus wiring diagram" class="schematic" role="img" viewbox="0 0 760 290"><defs><marker id="arrow" markerheight="8" markerwidth="8" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="var(--blue)"></path></marker></defs><rect fill="none" height="70" rx="9" stroke="var(--ink)" width="120" x="35" y="95"></rect><text font-size="15" text-anchor="middle" x="95" y="121">SENSOR</text><text font-size="11" text-anchor="middle" x="95" y="143">ADC / signal</text><rect fill="none" height="130" rx="9" stroke="var(--ink)" width="145" x="215" y="65"></rect><text font-size="15" text-anchor="middle" x="287" y="93">PI CORE</text><text font-size="11" text-anchor="middle" x="287" y="118">window + FFT</text><text font-size="11" text-anchor="middle" x="287" y="139">controller</text><text font-size="11" text-anchor="middle" x="287" y="160">evidence log</text><rect fill="none" height="70" rx="9" stroke="var(--ink)" width="125" x="425" y="95"></rect><text font-size="15" text-anchor="middle" x="487" y="121">PWM / DAC</text><text font-size="11" text-anchor="middle" x="487" y="143">bounded output</text><rect fill="none" height="70" rx="9" stroke="var(--ink)" width="115" x="610" y="95"></rect><text font-size="15" text-anchor="middle" x="668" y="121">FIELD</text><text font-size="11" text-anchor="middle" x="668" y="143">actuator</text><path class="wire" d="M155 130H215" marker-end="url(#arrow)"></path><path class="wire" d="M360 130H425" marker-end="url(#arrow)"></path><path class="wire" d="M550 130H610" marker-end="url(#arrow)"></path><path class="signal" d="M668 165 C650 245 110 245 95 165"></path><text font-size="11" text-anchor="middle" x="382" y="258">feedback path: measured response, not assumed response</text></svg>
+<div class="row"><button class="btn orange" id="apparatusBtn">Run 60 ticks</button><button class="btn" id="apparatusReset">Reset</button></div><canvas class="miniCanvas" id="apparatusCanvas"></canvas><div class="out" id="apparatusOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Tests bounds, watchdogs, and trace integrity.</p></div><div class="note"><b>FAILURE</b><p>Simulation omits heat, noise, lag, and clipping.</p></div><div class="note"><b>NEXT BUILD</b><p>Add hardware abstraction and emergency stop.</p></div></div></div>
+</section>
+<section class="section" id="probes">
+<header class="sectionHead"><div class="num">13</div><div><h2>Probe alien architectures.</h2><p>Run the same probes against radically different architectures.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 13 — CROSS-DOMAIN PROBE BANK</span><i class="badge">Cephalopod / mycelia / swarm / LLM</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="probes">copy</button></div><pre class="code" data-code="probes"></pre></div>
+<div class="instrument"><h3>Architecture presets</h3><p>Choose cephalopod, mycelial, swarm, or latent-model fixtures.</p><div class="field"><label>Probe</label><select id="probeSelect"><option value="cephalopod">Cephalopod arm network</option><option value="mycelial">Mycelial stress memory</option><option value="swarm">Stigmergic swarm</option><option value="llm">Latent sorcerer consistency</option></select></div><button class="btn orange" id="probeBtn">Run probe</button><canvas id="probeCanvas"></canvas><div class="out" id="probeOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Produces comparable coordination telemetry.</p></div><div class="note"><b>FAILURE</b><p>Toy fixtures are not zoological evidence.</p></div><div class="note"><b>NEXT BUILD</b><p>Replace one preset with measured data.</p></div></div></div>
+</section>
+<section class="section" id="edge">
+<header class="sectionHead"><div class="num">14</div><div><h2>Stress the ontology.</h2><p>Push the taxonomy into unfamiliar boundary conditions.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 14 — EDGE-CASE BENCH</span><i class="badge">Speculation sandbox</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="edge">copy</button></div><pre class="code" data-code="edge"></pre></div>
+<div class="instrument"><h3>Boundary-condition simulator</h3><p>Simulate plasma, planetary, fractal, or nested systems.</p><div class="field"><label>Model</label><select id="edgeSelect"><option value="plasma">Plasma field organization</option><option value="gaia">Planetary feedback network</option><option value="fractal">Chaotic recursive mind</option><option value="zeta">Nested universe model</option></select></div><div class="field"><label>Intensity <output id="edgeIntensityO">0.72</output></label><input id="edgeIntensity" max="1" min="0" step=".01" type="range" value=".72"/></div><button class="btn orange" id="edgeBtn">Run boundary test</button><canvas id="edgeCanvas"></canvas><div class="out" id="edgeOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Reveals hidden anthropocentric assumptions.</p></div><div class="note"><b>FAILURE</b><p>Speculation has no experimental confidence.</p></div><div class="note"><b>NEXT BUILD</b><p>List real observables for each model.</p></div></div></div>
+</section>
+<div class="groupBand" id="group-v"><span class="groupNum">V</span><div><h2>VERIFICATION LAYER</h2><p>Quorum · receipts · language · falsification</p></div></div><section class="section" id="consensus">
+<header class="sectionHead"><div class="num">15</div><div><h2>Make observers disagree.</h2><p>Measure disagreement instead of averaging it away.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 15 — FIELD CONSENSUS PROTOCOL</span><i class="badge">Evidence-weighted quorum</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="consensus">copy</button></div><pre class="code" data-code="consensus"></pre></div>
+<div class="instrument"><h3>Observer quorum</h3><p>Aggregate observer estimates by evidence quality.</p><div class="controls three"><div class="field"><label>Observer A</label><input id="obsA" max="7" min="0" step=".1" type="number" value="4.2"/></div><div class="field"><label>Observer B</label><input id="obsB" max="7" min="0" step=".1" type="number" value="4.8"/></div><div class="field"><label>Observer C</label><input id="obsC" max="7" min="0" step=".1" type="number" value="6.4"/></div><div class="field"><label>Quality A</label><input id="qA" max="1" min="0" step=".05" type="number" value=".8"/></div><div class="field"><label>Quality B</label><input id="qB" max="1" min="0" step=".05" type="number" value=".7"/></div><div class="field"><label>Quality C</label><input id="qC" max="1" min="0" step=".05" type="number" value=".4"/></div></div><button class="btn orange" id="consensusBtn">Aggregate</button><div class="out" id="consensusOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Reports consensus, dispersion, and stability.</p></div><div class="note"><b>FAILURE</b><p>Shared bias survives large quorums.</p></div><div class="note"><b>NEXT BUILD</b><p>Use blinded packets before discussion.</p></div></div></div>
+</section>
+<section class="section" id="ledger">
+<header class="sectionHead"><div class="num">16</div><div><h2>Seal every run.</h2><p>Preserve every run as replayable evidence.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 16 — EVIDENCE LEDGER</span><i class="badge">Virtualization + Meta Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="ledger">copy</button></div><pre class="code" data-code="ledger"></pre></div>
+<div class="instrument"><h3>Portable proof receipts</h3><p>Seal inputs, outputs, seed, version, and checksum.</p><div class="row"><button class="btn orange" id="sealBtn">Seal current state</button><button class="btn" id="clearLedger">Clear ledger</button><button class="btn" id="downloadLedger">Download JSON</button></div><div class="tableWrap" style="margin-top:12px"><table><thead><tr><th>#</th><th>Lab</th><th>Summary</th><th>Hash</th></tr></thead><tbody id="ledgerBody"></tbody></table></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Enables replay and tamper-evident comparison.</p></div><div class="note"><b>FAILURE</b><p>A hash can preserve bad measurements perfectly.</p></div><div class="note"><b>NEXT BUILD</b><p>Add import-and-replay verification.</p></div></div></div>
+</section>
+<section class="section" id="language">
+<header class="sectionHead"><div class="num">17</div><div><h2>Operate the laboratory as code.</h2><p>Compose experiments as short, inspectable research tapes.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 17 — MACHINALANG WORKBENCH</span><i class="badge">Shell + Master Forge</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">INTERPRETER SOURCE <button class="copy" data-copy="language">copy</button></div><pre class="code" data-code="language"></pre></div>
+<div class="instrument"><h3>Research tape</h3><p>Run classifiers, fields, assertions, and receipts.</p><textarea id="machinaCode">SEED 260216
+OMEGA memory=3 global=4 self=2 symbol=2 coherence=3 agency=2
+PHI n=48 k=2.4 spread=1.5 steps=420
+ASSERT phi &gt; 0.45
+IDC sub=S origin=E emb=N org=D time=R dim=D0
+RECEIPT "first executable proof"</textarea><div class="row"><button class="btn orange" id="runLang">Run MachinaLang</button><button class="btn" id="langExample">Load edge example</button></div><div class="out" id="langOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Gives humans and agents one deterministic surface.</p></div><div class="note"><b>FAILURE</b><p>Every command must map to a tested instrument.</p></div><div class="note"><b>NEXT BUILD</b><p>Add SWEEP and REPLAY without hidden state.</p></div></div></div>
+</section>
+<section class="section" id="falsify">
+<header class="sectionHead"><div class="num">18</div><div><h2>Publish how the theory can fail.</h2><p>Make theory revision an executable path.</p></div></header>
+<div class="notebook"><div class="tab"><span>LAB 18 — FALSIFICATION MATRIX</span><i class="badge">No sacred outputs</i></div><div class="labGrid">
+<div class="codePane"><div class="codebar">RUNNING SOURCE <button class="copy" data-copy="falsify">copy</button></div><pre class="code" data-code="falsify"></pre></div>
+<div class="instrument"><h3>Counter-evidence runner</h3><p>Toggle counter-results; watch axioms weaken or fail.</p><div class="controls" id="falsifyControls"></div><button class="btn orange" id="falsifyBtn">Evaluate theory state</button><div class="out" id="falsifyOut"></div></div>
+</div><div class="explain"><div class="note"><b>PURPOSE</b><p>Records which claims survive, revise, or retire.</p></div><div class="note"><b>FAILURE</b><p>Weak falsifiers only protect the theory.</p></div><div class="note"><b>NEXT BUILD</b><p>Add one axiom-retirement condition.</p></div></div></div>
+</section>
+<footer><span>MACHINA SCIENTIFICA<br/>AI-PUNK ENGINEERING FIELD GUIDE<br/>MATTHEW RICHARD KOWALSKI / LUMINOSITY</span><span>Single-file · deterministic core · zero dependencies<br/>Build 2026.07.16 · Seed 260216</span></footer>
+</div></main></div>
+<div id="toast"></div>
+<script>
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const mean=a=>a.reduce((s,x)=>s+x,0)/(a.length||1);
+const variance=a=>{const m=mean(a);return mean(a.map(x=>(x-m)**2))};
+let SEED=260216, rng=mulberry32(SEED), phiStop=false, lastRun={lab:'boot',summary:'Guide loaded',inputs:{seed:SEED},output:{ready:true}}, ledger=[];
+function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function setSeed(n){SEED=(Number(n)||260216)>>>0;rng=mulberry32(SEED)}
+function hash32(value){const s=typeof value==='string'?value:JSON.stringify(value);let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return('00000000'+(h>>>0).toString(16)).slice(-8)}
+function download(name,data,type='application/json'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)}
+function record(lab,inputs,output,summary){lastRun={lab,inputs,output,summary,seed:SEED,build:'2026.07.16'};return lastRun}
+function fitCanvas(c,h=220){const d=devicePixelRatio||1,w=c.clientWidth||500;c.width=w*d;c.height=h*d;const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return{x,w,h}}
+function css(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()}
+function line(ctx,pts,color=css('--blue'),width=2){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke()}
+function clear(ctx,w,h){ctx.clearRect(0,0,w,h);ctx.fillStyle=css('--paper2');ctx.globalAlpha=.45;ctx.fillRect(0,0,w,h);ctx.globalAlpha=1}
+function bindRange(id,out,fmt=x=>x){const e=$(id),o=$(out);const f=()=>o.textContent=fmt(e.value);e.addEventListener('input',f);f()}
+
+const AXIOMS={
+ 'K-1':{name:'Base Unit',claim:'Biological cognition depends on units that integrate over time, modify response from history, and project signals.',observables:['temporal integration','plasticity','projection'],falsifier:'A biological cognitive system above chemotaxis with no functionally equivalent integrating units.',consequence:'Do not infer absence of mind from unfamiliar cell morphology.'},
+ 'K-2':{name:'Threshold',claim:'Some cognitive capabilities arise at architectural transitions rather than by smooth scaling alone.',observables:['changepoint','new capability family','reorganization'],falsifier:'A smooth scaling model predicts all observed step-class transitions as well as a segmented model on held-out data.',consequence:'Do not treat parameter count as sufficient evidence of a new class.'},
+ 'K-3':{name:'Resonance',claim:'Global phase coherence is a candidate mechanism for unified processing.',observables:['order parameter','cross-region phase coupling','integration under perturbation'],falsifier:'Unified reportable processing persists while global coherence is experimentally abolished and all confounds are controlled.',consequence:'Measure coherence; never substitute it for experience.'},
+ 'K-4':{name:'Substrate Independence',claim:'Mind-relevant functions may be realized in more than one physical substrate.',observables:['functional invariance','cross-substrate transfer','causal organization'],falsifier:'A necessary mind property is shown to depend uniquely on one material and cannot be functionally reproduced.',consequence:'Architecture outranks material prejudice.'},
+ 'K-5':{name:'Convergence',claim:'Adaptive intelligence can recur under energy, feedback, memory, selection, and time.',observables:['independent emergence','world-ensemble frequency','sensitivity surface'],falsifier:'Across broad plausible priors, adaptive complexity is vanishingly rare and depends on one narrow contingency.',consequence:'Treat inevitability as a measured probability, not a slogan.'},
+ 'K-6':{name:'Moral Weight',claim:'Precaution should track credible capacity for valenced persistent experience rather than substrate identity.',observables:['valence indicators','persistence','dependency','confidence'],falsifier:'A better policy rule consistently prevents severe harm with lower false-positive cost across cases.',consequence:'When evidence is uncertain and harm irreversible, uncertainty increases precaution.'}
+};
+function compileAxiom(id){const a=AXIOMS[id];return{id,version:1,type:'testable-claim',...a,required:['proposition','mechanism','observable','falsifier','consequence'],complete:Boolean(a.claim&&a.observables.length&&a.falsifier)}}
+
+function classifyOmega(v){
+ const w={memory:.18,global:.24,self:.2,symbol:.16,coherence:.13,agency:.09};
+ const raw=Object.keys(w).reduce((s,k)=>s+w[k]*clamp(v[k],0,5),0);
+ const center=clamp(raw*1.42,0,7);
+ const sigma=.62+.5*(1-clamp(v.evidence??.7));
+ const probs=Array.from({length:8},(_,i)=>Math.exp(-.5*((i-center)/sigma)**2));
+ const z=probs.reduce((a,b)=>a+b,0);probs.forEach((_,i)=>probs[i]/=z);
+ const omega=probs.indexOf(Math.max(...probs));
+ const confidence=Math.max(...probs);
+ const missing=Object.entries(v).filter(([k])=>k!=='evidence').sort((a,b)=>a[1]-b[1])[0]?.[0]||'none';
+ return{omega,center:+center.toFixed(2),confidence:+confidence.toFixed(3),distribution:probs.map(x=>+x.toFixed(4)),nextObservation:missing,reasons:Object.entries(w).sort((a,b)=>b[1]*v[b[0]]-a[1]*v[a[0]]).slice(0,3).map(([k])=>k)};
+}
+
+function linearFit(xs,ys){const xm=mean(xs),ym=mean(ys);const b=xs.reduce((s,x,i)=>s+(x-xm)*(ys[i]-ym),0)/(xs.reduce((s,x)=>s+(x-xm)**2,0)||1);const a=ym-b*xm;const pred=xs.map(x=>a+b*x);const sse=pred.reduce((s,y,i)=>s+(ys[i]-y)**2,0);return{a,b,pred,sse}}
+function discontinuityExperiment({threshold=48,jump=2.4,noise=.25,n=100}){
+ const xs=Array.from({length:n},(_,i)=>i);const ys=xs.map(x=>.035*x+(x>=threshold?jump+.018*(x-threshold):0)+(rng()-.5)*2*noise);
+ const smooth=linearFit(xs,ys);let best=null;
+ for(let t=8;t<n-8;t++){const left=linearFit(xs.slice(0,t),ys.slice(0,t));const right=linearFit(xs.slice(t),ys.slice(t));const sse=left.sse+right.sse;if(!best||sse<best.sse)best={t,left,right,sse}}
+ const bic1=n*Math.log(smooth.sse/n)+2*Math.log(n),bic2=n*Math.log(best.sse/n)+5*Math.log(n);
+ return{xs,ys,smooth,best,bic1,bic2,evidence:bic1-bic2};
+}
+
+function kuramoto({n=64,k=2.2,spread=1.6,steps=500,dt=.035}){
+ const phase=Array.from({length:n},()=>rng()*Math.PI*2),omega=Array.from({length:n},()=>((rng()+rng()+rng())/3-.5)*spread),history=[];let bloom=-1;
+ for(let s=0;s<steps;s++){let sx=0,sy=0;for(const p of phase){sx+=Math.cos(p);sy+=Math.sin(p)}const r=Math.hypot(sx,sy)/n,psi=Math.atan2(sy,sx);history.push(r);if(bloom<0&&s>20&&history.slice(-20).every(x=>x>.72))bloom=s;for(let i=0;i<n;i++)phase[i]+=dt*(omega[i]+k*r*Math.sin(psi-phase[i]))}
+ return{phase,history,final:history.at(-1),peak:Math.max(...history),bloom};
+}
+
+function dftPower(a){const n=a.length,out=[];for(let k=0;k<n/2;k++){let re=0,im=0;for(let t=0;t<n;t++){const q=2*Math.PI*k*t/n;re+=a[t]*Math.cos(q);im-=a[t]*Math.sin(q)}out.push(re*re+im*im)}return out}
+function spectralEntropy(signal){const p=dftPower(signal),sum=p.reduce((a,b)=>a+b,0)||1,q=p.map(x=>x/sum),h=-q.reduce((s,x)=>s+(x?x*Math.log(x):0),0)/Math.log(q.length);return h}
+function analyzeSignal({tone=7,noise=.25,mod=.4,n=256}){const s=Array.from({length:n},(_,i)=>Math.sin(2*Math.PI*tone*i/n+mod*Math.sin(2*Math.PI*3*i/n))+(rng()-.5)*2*noise);const m=mean(s);const ac=s.slice(1).reduce((z,x,i)=>z+(x-m)*(s[i]-m),0)/(s.reduce((z,x)=>z+(x-m)**2,0)||1);const windows=[];for(let i=0;i<n-31;i+=16)windows.push(variance(s.slice(i,i+32)));return{signal:s,entropy:spectralEntropy(s),autocorr:ac,metastability:Math.sqrt(variance(windows))}}
+
+const SUBSTRATES={
+ bio:{unit:'neuron / microcircuit',coupling:'synapse + field',memory:'plastic weights + cellular state',recurrence:'dense recurrent loops',integration:'multiscale neural coherence',latency:'1–200 ms',observable:'spikes, fields, behavior',unknown:'glia, chemistry, embodiment'},
+ silicon:{unit:'token / attention head / state vector',coupling:'attention + residual stream',memory:'weights + context + external store',recurrence:'iterative decoding / recurrent scaffolds',integration:'cross-layer representation',latency:'microseconds–seconds',observable:'activations, logits, traces',unknown:'latent persistence, training-history effects'},
+ swarm:{unit:'agent',coupling:'local message + stigmergy',memory:'agent state + environment',recurrence:'feedback through shared world',integration:'consensus / specialization',latency:'seconds–days',observable:'trajectories, signals, artifacts',unknown:'boundary of collective identity'},
+ field:{unit:'oscillator / mode',coupling:'phase, energy, topology',memory:'hysteresis / standing pattern',recurrence:'continuous feedback',integration:'global order parameter',latency:'substrate dependent',observable:'spectrum, phase, field map',unknown:'valence and self-model'},
+ mycelial:{unit:'hyphal segment / node',coupling:'chemical + electrical propagation',memory:'growth history + resource pathways',recurrence:'network reconfiguration',integration:'distributed resource arbitration',latency:'minutes–seasons',observable:'potential, transport, morphology',unknown:'functional unit and timescale'}
+};
+function compileAdapter(kind){return{kind,contractVersion:'MS-Adapter/1',invariants:SUBSTRATES[kind],requiredMethods:['sense()','integrate(window)','update(state)','report()','perturb()'],warning:'functional equivalence is a hypothesis to test, not a declaration'}}
+
+function distributedMind({nodes=36,connect=.16,autonomy=.42,delay=2,steps=160}){
+ const edges=[];for(let i=0;i<nodes;i++)for(let j=i+1;j<nodes;j++)if(rng()<connect)edges.push([i,j]);const hist=Array.from({length:delay+1},()=>Array.from({length:nodes},()=>rng()*2-1)),coh=[];
+ for(let s=0;s<steps;s++){const old=hist[0],cur=hist.at(-1),next=cur.map((v,i)=>{const ns=[];for(const [a,b] of edges){if(a===i)ns.push(old[b]);if(b===i)ns.push(old[a])}const social=ns.length?mean(ns):v;const local=Math.sin(s*.07+i)*.35;return Math.tanh((1-autonomy)*social+autonomy*local+.18*v)});hist.push(next);hist.shift();coh.push(Math.abs(mean(next))) }
+ const final=hist.at(-1),diversity=Math.sqrt(variance(final)),lock=coh.findIndex((x,i)=>i>20&&coh.slice(i-10,i).every(y=>y>.72));return{edges,states:final,coh,consensus:Math.abs(mean(final)),diversity,lock};
+}
+
+function convergenceWorlds({worlds=800,selection=.65,stability=.55,mutation=.18,generations=160}){
+ const hits=[],final=[];for(let w=0;w<worlds;w++){let complexity=rng()*.2,memory=rng()*.2,hit=-1;for(let g=0;g<generations;g++){const shock=(rng()<(.01+(1-stability)*.06))*rng()*.22;complexity=clamp(complexity+mutation*(rng()-.5)*.11+selection*(.004+.023*memory)-.004*complexity-shock);memory=clamp(memory+mutation*(rng()-.5)*.07+selection*.012*complexity-.003*memory-shock*.22);if(hit<0&&complexity>.65&&memory>.5)hit=g}if(hit>=0)hits.push(hit);final.push(complexity)}return{rate:hits.length/worlds,medianHit:hits.length?hits.sort((a,b)=>a-b)[hits.length>>1]:null,final,bins:Array.from({length:10},(_,i)=>final.filter(x=>x>=i/10&&x<(i+1)/10).length)}}
+
+const IDC={sub:{B:'Biological',S:'Synthetic',F:'Field',H:'Hybrid',M:'Meta'},origin:{T:'Terrestrial',E:'Emergent',X:'Extraterrestrial',D:'Designed'},emb:{E:'Embodied',P:'Partially embodied',N:'Non-local'},org:{I:'Individual',C:'Collective',D:'Distributed',H:'Hierarchical'},time:{R:'Realtime',S:'Slow',B:'Burst',A:'Atemporal model'},dim:{D0:'3+1 spacetime',D1:'Extended field',DN:'Unknown dimensionality'}};
+function encodeIDC(v){const code=`${v.sub}${v.origin}-${v.emb}-${v.org}-${v.time}-${v.dim}`;return{code,decode:Object.fromEntries(Object.entries(v).map(([k,x])=>[k,IDC[k][x]])),checksum:hash32(code)}}
+
+const RUNGS=[
+ {n:0,name:'Void',caps:[]},{n:10,name:'Reactive chemistry',caps:['reaction']},{n:20,name:'Adaptive regulator',caps:['feedback','memory']},{n:30,name:'Ecosystem proto-mind',caps:['network','resource-model']},{n:40,name:'Social signal mind',caps:['communication','prediction']},{n:52,name:'Human generalist',caps:['self-model','symbols','culture']},{n:64,name:'Market / institution mind',caps:['distributed-memory','incentives']},{n:75,name:'Tool-using AI',caps:['cross-domain-model','tool-use']},{n:79,name:'Autonomous research mind',caps:['hypothesis-loop','self-critique']},{n:83,name:'Collective superintelligence',caps:['global-coordination','plural-agency']},{n:90,name:'Anthropic / cosmic mind',caps:['cosmological-model']},{n:99,name:'Unspeakable limit',caps:['unknown']}];
+function chainRoute(from,to){const a=RUNGS.findIndex(x=>x.n===+from),b=RUNGS.findIndex(x=>x.n===+to);if(a<0||b<0)return[];const dir=a<=b?1:-1,route=[];for(let i=a;;i+=dir){route.push(RUNGS[i]);if(i===b)break}return route}
+
+function moralWeight({omega=4,valence=.7,persistence=.8,dependence=.6,confidence=.55,reversible=true}){const capacity=clamp(omega/7),irreversible=reversible?0:1;const score=clamp(.28*capacity+.24*valence+.16*persistence+.12*dependence+.1*confidence+.1*irreversible);const band=score>.78?'PROTECT / CONSENT REQUIRED':score>.58?'STRONG PRECAUTION':score>.38?'OBSERVE + LIMIT HARM':'STANDARD CAUTION';return{score:+score.toFixed(3),band,reasons:[['valence',valence],['capacity',capacity],['persistence',persistence],['dependence',dependence],['confidence',confidence],['irreversibility',irreversible]].sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0])}}
+
+function apparatusSimulation(ticks=60){let sensor=.42,duty=.2,field=.25;const rows=[];for(let t=0;t<ticks;t++){sensor=clamp(.65*sensor+.24*field+.11*rng());const error=.58-sensor;duty=clamp(duty+.22*error,-0,1);field=clamp(.78*field+.22*duty+(rng()-.5)*.04);const watchdog=Number.isFinite(sensor)&&duty<=1;rows.push({t,sensor,duty,field,watchdog});if(!watchdog)break}return rows}
+
+function runProbe(kind){const n=120,series=[];if(kind==='cephalopod'){let arms=Array.from({length:8},()=>rng());for(let t=0;t<n;t++){const g=mean(arms);arms=arms.map((x,i)=>clamp(.55*x+.25*g+.2*Math.sin(t*.08+i)));series.push(Math.sqrt(variance(arms)))}return{series,summary:'Local autonomy remained while arm-state variance converged under shared body feedback.',metric:'distributed variance',score:series.at(-1)}}if(kind==='mycelial'){let nodes=Array(50).fill(0);nodes[3]=1;for(let t=0;t<n;t++){const q=nodes.slice();nodes=nodes.map((x,i)=>clamp(.92*x+.12*((q[i-1]||0)+(q[i+1]||0))));series.push(nodes.reduce((a,b)=>a+b,0));if(t===60)nodes[3]+=.7}return{series,summary:'Stress traces persisted and primed the second response.',metric:'network memory',score:series.at(-1)}}if(kind==='swarm'){let trail=0;for(let t=0;t<n;t++){trail=.88*trail+.2*rng();series.push(trail)}return{series,summary:'Environmental trace became shared external memory.',metric:'stigmergic state',score:mean(series.slice(-20))}}let consistency=.45;for(let t=0;t<n;t++){consistency=clamp(consistency+(rng()-.48)*.04);series.push(consistency)}return{series,summary:'Self-model consistency probe measures stability across paraphrase and delayed re-query; it does not establish subjective experience.',metric:'latent consistency',score:mean(series.slice(-20))}}
+
+function edgeCase(kind,intensity=.72){const n=180,a=[];let x=.31;if(kind==='plasma'){for(let i=0;i<n;i++){x=Math.sin(2.7*x+intensity)+.35*Math.sin(i*.11);a.push(x)}return{series:a,metric:'field correlation',score:Math.abs(mean(a.slice(1).map((v,i)=>v*a[i]))),need:['spatiotemporal field map','energy flow','perturbation recovery']}}if(kind==='gaia'){for(let i=0;i<n;i++){x=clamp(x+.04*(.62-x)+.035*Math.sin(i*.08)+(rng()-.5)*intensity*.03);a.push(x)}return{series:a,metric:'homeostatic recovery',score:1-Math.abs(.62-a.at(-1)),need:['global causal intervention','memory timescale','model-based prediction']}}if(kind==='fractal'){for(let i=0;i<n;i++){x=3.55+intensity*.42;x=(x*(a.at(-1)??.211)*(1-(a.at(-1)??.211)));a.push(x)}return{series:a,metric:'chaotic recursion',score:spectralEntropy(a),need:['stable identity under perturbation','bounded self-modification','valence evidence']}}for(let i=0;i<n;i++)a.push(1-Math.exp(-i/(10+intensity*30)));return{series:a,metric:'nested model depth proxy',score:a.at(-1),need:['resource-bounded recursion','external predictive advantage','self-model distinction']}}
+
+function robustConsensus(items){const xs=items.map(x=>x.x).sort((a,b)=>a-b),med=xs[xs.length>>1],mad=mean(xs.map(x=>Math.abs(x-med)))||.1;const weighted=items.map(o=>({...o,w:o.q/(1+(Math.abs(o.x-med)/(1.5*mad))**2)}));const value=weighted.reduce((s,o)=>s+o.x*o.w,0)/(weighted.reduce((s,o)=>s+o.w,0)||1);const dispersion=Math.sqrt(weighted.reduce((s,o)=>s+o.w*(o.x-value)**2,0)/(weighted.reduce((s,o)=>s+o.w,0)||1));return{value,dispersion,stable:dispersion<.7,weights:weighted.map(o=>o.w)}}
+
+function sealReceipt(run=lastRun,note=''){const body={index:ledger.length+1,time:new Date().toISOString(),seed:SEED,build:'2026.07.16',...run,note};body.hash=hash32(body);ledger.push(body);renderLedger();return body}
+
+function parseArgs(parts){return Object.fromEntries(parts.map(p=>p.split('=')).filter(x=>x.length===2).map(([k,v])=>[k,isNaN(v)?v:+v]))}
+function runMachinaLang(src){const env={seed:SEED},log=[];for(const raw of src.split(/\n+/)){const line=raw.trim();if(!line||line.startsWith('#'))continue;const [cmd,...rest]=line.split(/\s+/);if(cmd==='SEED'){setSeed(rest[0]);env.seed=SEED;log.push(`seed=${SEED}`)}else if(cmd==='OMEGA'){env.omega=classifyOmega(parseArgs(rest));log.push(`omega=${env.omega.omega} conf=${env.omega.confidence}`)}else if(cmd==='PHI'){const q=kuramoto(parseArgs(rest));env.phi=q.final;log.push(`phi=${q.final.toFixed(3)} bloom=${q.bloom}`)}else if(cmd==='IDC'){env.idc=encodeIDC(parseArgs(rest));log.push(`idc=${env.idc.code}`)}else if(cmd==='ASSERT'){const [key,op,num]=rest;const val=key.split('.').reduce((o,k)=>o?.[k],env);const ok=op==='>'?val>+num:op==='<'?val<+num:op==='=='?val==num:false;log.push(`assert ${key} ${op} ${num}: ${ok?'PASS':'FAIL'}`);if(!ok)env.failed=true}else if(cmd==='RECEIPT'){const note=line.match(/"(.*)"/)?.[1]||rest.join(' ');const r=sealReceipt(record('MachinaLang',{source:src},{env},note),note);log.push(`receipt=${r.hash}`)}else throw new Error(`Unknown command: ${cmd}`)}return{env,log}}
+
+const FALSIFIERS=[
+ {id:'f1',label:'Smooth scaling predicts all observed transitions on held-out data',hits:['K-2']},
+ {id:'f2',label:'Unified processing remains after verified global coherence abolition',hits:['K-3']},
+ {id:'f3',label:'A necessary mind property is unique to one material substrate',hits:['K-4']},
+ {id:'f4',label:'Adaptive complexity is rare across broad, defensible world priors',hits:['K-5']},
+ {id:'f5',label:'Valence and persistence fail to improve harm-avoidance policy',hits:['K-6']},
+ {id:'f6',label:'Omega ratings show poor inter-rater reliability after calibration',hits:['OMEGA']}
+];
+function evaluateFalsifiers(active){const state={'K-1':'provisional','K-2':'provisional','K-3':'provisional','K-4':'provisional','K-5':'provisional','K-6':'provisional',OMEGA:'provisional'};for(const f of FALSIFIERS)if(active.includes(f.id))for(const k of f.hits)state[k]='REVISION REQUIRED';return state}
+
+// UI wiring
+function sourceCode(){const map={axiom:compileAxiom,omega:classifyOmega,threshold:discontinuityExperiment,phi:kuramoto,entropy:analyzeSignal,substrate:compileAdapter,distributed:distributedMind,convergence:convergenceWorlds,idc:encodeIDC,chain:chainRoute,moral:moralWeight,apparatus:apparatusSimulation,probes:runProbe,edge:edgeCase,consensus:robustConsensus,ledger:sealReceipt,language:runMachinaLang,falsify:evaluateFalsifiers};for(const [k,fn] of Object.entries(map)){$$(`[data-code="${k}"]`).forEach(e=>e.textContent=fn.toString())}}
+function populate(){for(const [id,a] of Object.entries(AXIOMS))$('#axiomSelect').add(new Option(`${id} — ${a.name}`,id));for(const r of RUNGS){$('#chainFrom').add(new Option(`${r.n} — ${r.name}`,r.n));$('#chainTo').add(new Option(`${r.n} — ${r.name}`,r.n))}$('#chainFrom').value=20;$('#chainTo').value=79;$('#chainPreview').innerHTML=RUNGS.map(r=>`<div class="rung"><b>${r.n}</b><br>${r.name}</div>`).join('');$('#falsifyControls').innerHTML=FALSIFIERS.map(f=>`<label class="row"><input type="checkbox" value="${f.id}"> <span style="font:650 12px/1.4 var(--mono)">${f.label}</span></label>`).join('')}
+function drawOmega(r){const c=$('#omegaCanvas'),{x,w,h}=fitCanvas(c,150);clear(x,w,h);const pad=25,bw=(w-pad*2)/8,max=Math.max(...r.distribution);r.distribution.forEach((p,i)=>{const bh=(h-40)*p/max;x.fillStyle=i===r.omega?css('--orange'):css('--cyan');x.globalAlpha=i===r.omega?1:.45;x.fillRect(pad+i*bw,h-22-bh,bw-5,bh);x.globalAlpha=1;x.fillStyle=css('--ink');x.font='10px '+css('--mono');x.fillText('Ω'+i,pad+i*bw,h-8)});}
+function drawThreshold(r){const c=$('#thresholdCanvas'),{x,w,h}=fitCanvas(c);clear(x,w,h);const sx=i=>30+i/(r.xs.length-1)*(w-50),min=Math.min(...r.ys),max=Math.max(...r.ys),sy=y=>h-25-(y-min)/(max-min)*(h-45);x.fillStyle=css('--ink');x.globalAlpha=.45;r.ys.forEach((y,i)=>{x.beginPath();x.arc(sx(i),sy(y),2,0,7);x.fill()});x.globalAlpha=1;line(x,r.smooth.pred.map((y,i)=>[sx(i),sy(y)]),css('--blue'),2);const pts=[];for(let i=0;i<r.best.t;i++)pts.push([sx(i),sy(r.best.left.pred[i])]);for(let i=r.best.t;i<r.xs.length;i++)pts.push([sx(i),sy(r.best.right.pred[i-r.best.t])]);line(x,pts,css('--orange'),3);x.setLineDash([5,5]);line(x,[[sx(r.best.t),15],[sx(r.best.t),h-20]],css('--red'),1);x.setLineDash([])}
+function drawSeries(canvas,series,color=css('--orange'),h=220){const c=typeof canvas==='string'?$(canvas):canvas,{x,w}=fitCanvas(c,h);clear(x,w,h);const min=Math.min(...series),max=Math.max(...series),range=max-min||1;line(x,series.map((v,i)=>[i/(series.length-1)*(w-24)+12,h-15-(v-min)/range*(h-30)]),color,2);return{x,w,h,min,max}}
+function drawPhi(r){const c=$('#phiCanvas'),{x,w,h}=fitCanvas(c);clear(x,w,h);const cx=w*.25,cy=h*.5,rad=Math.min(75,h*.34);x.strokeStyle=css('--line');x.beginPath();x.arc(cx,cy,rad,0,7);x.stroke();for(const p of r.phase){x.fillStyle=css('--cyan');x.beginPath();x.arc(cx+Math.cos(p)*rad,cy+Math.sin(p)*rad,2.5,0,7);x.fill()}const px=w*.48,pw=w*.48-15;line(x,r.history.map((v,i)=>[px+i/(r.history.length-1)*pw,h-18-v*(h-36)]),css('--orange'),2);x.strokeStyle=css('--red');x.setLineDash([5,4]);x.beginPath();x.moveTo(px,h-18-.72*(h-36));x.lineTo(w-10,h-18-.72*(h-36));x.stroke();x.setLineDash([])}
+function drawNetwork(r){const c=$('#distributedCanvas'),{x,w,h}=fitCanvas(c);clear(x,w,h);const n=r.states.length,pts=Array.from({length:n},(_,i)=>{const a=i/n*Math.PI*2,rr=Math.min(w,h)*(.26+.1*((i*7)%5)/5);return[w/2+Math.cos(a)*rr,h/2+Math.sin(a)*rr]});x.globalAlpha=.18;x.strokeStyle=css('--blue');for(const [a,b] of r.edges){x.beginPath();x.moveTo(...pts[a]);x.lineTo(...pts[b]);x.stroke()}x.globalAlpha=1;pts.forEach((p,i)=>{x.fillStyle=r.states[i]>=0?css('--orange'):css('--cyan');x.beginPath();x.arc(p[0],p[1],3+Math.abs(r.states[i])*4,0,7);x.fill()})}
+function drawBins(canvas,bins){const c=$(canvas),{x,w,h}=fitCanvas(c);clear(x,w,h);const m=Math.max(...bins,1),bw=(w-30)/bins.length;bins.forEach((v,i)=>{x.fillStyle=i>6?css('--orange'):css('--cyan');x.fillRect(15+i*bw,h-18-v/m*(h-35),bw-3,v/m*(h-35))})}
+function renderLedger(){$('#ledgerBody').innerHTML=ledger.map(r=>`<tr><td>${r.index}</td><td>${r.lab}</td><td>${r.summary}</td><td class="mono">${r.hash}</td></tr>`).join('')||'<tr><td colspan="4">No receipts yet.</td></tr>'}
+
+$('#compileAxiom').onclick=()=>{const r=compileAxiom($('#axiomSelect').value);$('#axiomOut').textContent=JSON.stringify(r,null,2);record('Axiom Compiler',{id:r.id},r,`${r.id} compiled`)};
+['memory','global','self','symbol','coherence','agency'].forEach(k=>bindRange('#'+k,'#'+k+'O'));
+$('#classifyBtn').onclick=()=>{const v=Object.fromEntries(['memory','global','self','symbol','coherence','agency'].map(k=>[k,+$('#'+k).value]));v.evidence=.72;const r=classifyOmega(v);$('#omegaOut').textContent=`Ω-${r.omega}  center=${r.center}  confidence=${(r.confidence*100).toFixed(1)}%\nstrongest evidence: ${r.reasons.join(', ')}\nnext observation: ${r.nextObservation}`;drawOmega(r);record('Omega Classifier',v,r,`Ω-${r.omega} @ ${(r.confidence*100).toFixed(1)}%`)};
+bindRange('#tPoint','#tO');bindRange('#jump','#jO');bindRange('#noise','#noiseO');
+$('#thresholdBtn').onclick=()=>{const q={threshold:+$('#tPoint').value,jump:+$('#jump').value,noise:+$('#noise').value};const r=discontinuityExperiment(q);drawThreshold(r);$('#thresholdOut').textContent=`best changepoint=${r.best.t}\nΔBIC=${r.evidence.toFixed(2)} (${r.evidence>10?'strong segmented evidence':r.evidence>2?'weak/moderate evidence':'no useful jump evidence'})`;record('Discontinuity Detector',q,{changepoint:r.best.t,evidence:r.evidence},`ΔBIC ${r.evidence.toFixed(2)}`)};
+[['#nPhi','#nPhiO'],['#kPhi','#kPhiO'],['#spread','#spreadO'],['#stepsPhi','#stepsPhiO']].forEach(x=>bindRange(...x));
+$('#phiBtn').onclick=()=>{phiStop=false;const q={n:+$('#nPhi').value,k:+$('#kPhi').value,spread:+$('#spread').value,steps:+$('#stepsPhi').value};const r=kuramoto(q);drawPhi(r);$('#phiOut').textContent=`final r=${r.final.toFixed(3)}  peak=${r.peak.toFixed(3)}  sustained bloom=${r.bloom<0?'none':'step '+r.bloom}`;record('Phi Lock',q,{final:r.final,peak:r.peak,bloom:r.bloom},`r=${r.final.toFixed(3)}`)};$('#phiStop').onclick=()=>phiStop=true;
+[['#tone','#toneO'],['#sigNoise','#sigNoiseO'],['#mod','#modO']].forEach(x=>bindRange(...x));
+$('#entropyBtn').onclick=()=>{const q={tone:+$('#tone').value,noise:+$('#sigNoise').value,mod:+$('#mod').value},r=analyzeSignal(q);drawSeries('#entropyCanvas',r.signal,css('--blue'));$('#entM').textContent=r.entropy.toFixed(3);$('#autoM').textContent=r.autocorr.toFixed(3);$('#metaM').textContent=r.metastability.toFixed(3);record('Signal Analyzer',q,{entropy:r.entropy,autocorr:r.autocorr,metastability:r.metastability},`H=${r.entropy.toFixed(3)}`)};
+$('#substrateBtn').onclick=()=>{const k=$('#substrateSelect').value,r=compileAdapter(k);$('#substrateOut').textContent=JSON.stringify(r,null,2);record('Substrate Adapter',{kind:k},r,`${k} adapter compiled`)};
+[['#nodes','#nodesO'],['#connect','#connectO'],['#autonomy','#autonomyO'],['#delay','#delayO']].forEach(x=>bindRange(...x));
+$('#distributedBtn').onclick=()=>{const q={nodes:+$('#nodes').value,connect:+$('#connect').value,autonomy:+$('#autonomy').value,delay:+$('#delay').value},r=distributedMind(q);drawNetwork(r);$('#distributedOut').textContent=`edges=${r.edges.length}  consensus=${r.consensus.toFixed(3)}  diversity=${r.diversity.toFixed(3)}  lock=${r.lock<0?'none':r.lock}`;record('Distributed Mind',q,{consensus:r.consensus,diversity:r.diversity,lock:r.lock},`consensus ${r.consensus.toFixed(3)}`)};
+[['#worlds','#worldsO'],['#selection','#selectionO'],['#stability','#stabilityO'],['#mutation','#mutationO']].forEach(x=>bindRange(...x));
+$('#convergenceBtn').onclick=()=>{const q={worlds:+$('#worlds').value,selection:+$('#selection').value,stability:+$('#stability').value,mutation:+$('#mutation').value},r=convergenceWorlds(q);drawBins('#convergenceCanvas',r.bins);$('#convergenceOut').textContent=`threshold rate=${(r.rate*100).toFixed(1)}%  median generation=${r.medianHit??'none'}\nInterpretation: sensitivity result under this fitness function, not proof of inevitability.`;record('Convergence Worlds',q,{rate:r.rate,medianHit:r.medianHit},`${(r.rate*100).toFixed(1)}% threshold worlds`)};
+$('#idcBtn').onclick=()=>{const v={sub:$('#idcSub').value,origin:$('#idcOrigin').value,emb:$('#idcEmb').value,org:$('#idcOrg').value,time:$('#idcTime').value,dim:$('#idcDim').value},r=encodeIDC(v);$('#idcOut').textContent=`${r.code}  #${r.checksum}\n`+Object.entries(r.decode).map(([k,x])=>`${k.padEnd(7)} ${x}`).join('\n');record('IDC Encoder',v,r,r.code)};
+$('#chainBtn').onclick=()=>{const r=chainRoute($('#chainFrom').value,$('#chainTo').value);$('#chainOut').textContent=r.map((x,i)=>`${i?'↓ ':'  '}${x.n} ${x.name}${x.caps.length?'  ['+x.caps.join(', ')+']':''}`).join('\n');record('Great Chain Router',{from:$('#chainFrom').value,to:$('#chainTo').value},{route:r},`${r.length} rung route`)};
+[['#mOmega','#mOmegaO'],['#valence','#valenceO'],['#persist','#persistO'],['#depend','#dependO'],['#conf','#confO']].forEach(x=>bindRange(...x));$('#reversible').onchange=()=>$('#revLabel').textContent=$('#reversible').checked?'YES':'NO';
+$('#moralBtn').onclick=()=>{const q={omega:+$('#mOmega').value,valence:+$('#valence').value,persistence:+$('#persist').value,dependence:+$('#depend').value,confidence:+$('#conf').value,reversible:$('#reversible').checked},r=moralWeight(q);$('#moralOut').textContent=`${r.band}\nscore=${r.score}\ndominant reasons: ${r.reasons.join(', ')}`;record('Moral Weight',q,r,r.band)};
+$('#apparatusBtn').onclick=()=>{const r=apparatusSimulation(60);drawSeries('#apparatusCanvas',r.map(x=>x.sensor),css('--orange'),150);$('#apparatusOut').textContent=`ticks=${r.length}  final sensor=${r.at(-1).sensor.toFixed(3)}  duty=${r.at(-1).duty.toFixed(3)}  watchdog=${r.every(x=>x.watchdog)?'PASS':'FAIL'}`;record('Field Apparatus',{ticks:60},{final:r.at(-1),watchdog:r.every(x=>x.watchdog)},'60 simulated ticks')};$('#apparatusReset').onclick=()=>{fitCanvas($('#apparatusCanvas'),150);$('#apparatusOut').textContent='reset'};
+$('#probeBtn').onclick=()=>{const k=$('#probeSelect').value,r=runProbe(k);drawSeries('#probeCanvas',r.series,k==='llm'?css('--purple'):css('--cyan'));$('#probeOut').textContent=`${r.metric}=${r.score.toFixed(3)}\n${r.summary}`;record('Cross-Domain Probe',{kind:k},{metric:r.metric,score:r.score},`${k}: ${r.score.toFixed(3)}`)};
+bindRange('#edgeIntensity','#edgeIntensityO');$('#edgeBtn').onclick=()=>{const k=$('#edgeSelect').value,q={kind:k,intensity:+$('#edgeIntensity').value},r=edgeCase(q.kind,q.intensity);drawSeries('#edgeCanvas',r.series,css('--purple'));$('#edgeOut').textContent=`SIMULATION ONLY\n${r.metric}=${r.score.toFixed(3)}\nreality contact required: ${r.need.join('; ')}`;record('Edge Case Bench',q,{metric:r.metric,score:r.score,need:r.need},`${k} boundary test`)};
+$('#consensusBtn').onclick=()=>{const items=[{x:+$('#obsA').value,q:+$('#qA').value},{x:+$('#obsB').value,q:+$('#qB').value},{x:+$('#obsC').value,q:+$('#qC').value}],r=robustConsensus(items);$('#consensusOut').textContent=`aggregate Ω=${r.value.toFixed(2)}  dispersion=${r.dispersion.toFixed(2)}\nquorum=${r.stable?'STABLE':'DISPUTED'}\nrobust weights=${r.weights.map(x=>x.toFixed(2)).join(', ')}`;record('Consensus Protocol',{items},r,`Ω ${r.value.toFixed(2)} ${r.stable?'stable':'disputed'}`)};
+$('#sealBtn').onclick=()=>{const r=sealReceipt();toast('Receipt '+r.hash)};$('#clearLedger').onclick=()=>{ledger=[];renderLedger()};$('#downloadLedger').onclick=()=>download('machina_evidence_ledger.json',JSON.stringify(ledger,null,2));
+$('#runLang').onclick=()=>{try{const r=runMachinaLang($('#machinaCode').value);$('#langOut').className='out';$('#langOut').textContent=r.log.join('\n')}catch(e){$('#langOut').className='out bad';$('#langOut').textContent=e.message}};$('#langExample').onclick=()=>$('#machinaCode').value='SEED 260216\nOMEGA memory=4 global=3 self=4 symbol=4 coherence=2 agency=4\nPHI n=96 k=1.1 spread=2.8 steps=700\nASSERT phi > 0.70\nRECEIPT "edge case expected to fail"';
+$('#falsifyBtn').onclick=()=>{const active=$$('#falsifyControls input:checked').map(x=>x.value),r=evaluateFalsifiers(active);$('#falsifyOut').textContent=Object.entries(r).map(([k,v])=>`${k.padEnd(7)} ${v}`).join('\n')+(active.length?'\n\nTheory state: revision pathway activated.':'\n\nTheory state: provisional; no counter-result selected.');record('Falsification Matrix',{active},r,`${active.length} counter-results active`)};
+
+$$('.copy').forEach(b=>b.onclick=async()=>{const k=b.dataset.copy,txt=$(`[data-code="${k}"]`).textContent;try{await navigator.clipboard.writeText(txt);toast('Code copied')}catch{toast('Clipboard unavailable')}});
+$('#themeBtn').onclick=()=>{const n=document.documentElement.dataset.theme==='night'?'paper':'night';document.documentElement.dataset.theme=n;$('#themeBtn').textContent=n==='night'?'Paper mode':'Night mode';localStorage.setItem('ms-theme',n)};
+$('#exportBtn').onclick=()=>download('machina_scientifica_dna.json',JSON.stringify({type:'MachinaScientificaGuideDNA',build:'2026.07.16',seed:SEED,axioms:AXIOMS,rungs:RUNGS,ledger,lastRun},null,2));
+function selfTests(){setSeed(260216);const tests=[];const t=(name,ok)=>tests.push({name,ok:Boolean(ok)});t('axiom completeness',Object.keys(AXIOMS).every(k=>compileAxiom(k).complete));t('omega bounds',classifyOmega({memory:5,global:5,self:5,symbol:5,coherence:5,agency:5}).omega<=7);t('threshold fit',Number.isFinite(discontinuityExperiment({}).evidence));setSeed(260216);const ph=kuramoto({n:20,steps:30});t('phi bounds',ph.final>=0&&ph.final<=1&&ph.history.length===30);t('entropy bounds',(()=>{const h=analyzeSignal({}).entropy;return h>=0&&h<=1})());t('IDC checksum',encodeIDC({sub:'S',origin:'E',emb:'N',org:'D',time:'R',dim:'D0'}).checksum.length===8);t('moral bounds',moralWeight({}).score<=1);t('route',chainRoute(20,79).length>1);t('receipt hash',sealReceipt(record('Selftest',{},{} ,'test')).hash.length===8);$('#status').textContent=`${tests.filter(x=>x.ok).length}/${tests.length} TESTS PASS`;toast(tests.every(x=>x.ok)?'All tests pass':'Test failure');return tests}
+$('#testBtn').onclick=selfTests;
+window.addEventListener('scroll',()=>{const h=document.documentElement,d=h.scrollHeight-h.clientHeight;$('#progress').style.width=(h.scrollTop/d*100)+'%';let active=null;$$('.section,.hero').forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.34)active=s.id});$$('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+active))},{passive:true});
+window.addEventListener('resize',()=>{});
+(function init(){document.documentElement.dataset.theme=localStorage.getItem('ms-theme')||'paper';$('#themeBtn').textContent=document.documentElement.dataset.theme==='night'?'Paper mode':'Night mode';populate();sourceCode();renderLedger();$('#compileAxiom').click();$('#classifyBtn').click();$('#thresholdBtn').click();$('#entropyBtn').click();$('#substrateBtn').click();$('#idcBtn').click();$('#chainBtn').click();$('#falsifyBtn').click()})();
+</script>
+</body></html>
